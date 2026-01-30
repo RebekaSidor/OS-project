@@ -1,0 +1,13 @@
+version: "3.9"
+
+services:
+  analysis:
+    build: .
+    container_name: sudoku_analytics
+    volumes:
+      - sudoku_data:/data
+      - ./output:/output
+    command: python analysis.py
+
+volumes:
+  sudoku_data:

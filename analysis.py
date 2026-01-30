@@ -3,7 +3,10 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter
 
 #load dataset
-df = pd.read_csv("sudoku.csv")
+df = pd.read_csv("/data/sudoku.csv")
+
+#ensure puzzles are strings
+df["puzzle"] = df["puzzle"].astype(str)
 
 #count empty cells ('0') in each puzzle
 df["empty_cells"] = df["puzzle"].apply(lambda x: x.count("0"))
@@ -28,7 +31,7 @@ difficulty_counts = df["difficulty"].value_counts()
 
 
 #write results to txt file
-with open("results.txt", "w") as f:
+with open("/output/results.txt", "w") as f:
     f.write(f"Total Sudoku puzzles: {total_puzzles}\n")
     f.write(f"Average empty cells per puzzle: {avg_empty:.2f}\n")
     f.write(f"Minimum empty cells: {min_empty}\n")
@@ -45,7 +48,7 @@ plt.ylabel("Number of Puzzles")
 formatter = FuncFormatter(lambda y, _: f'{int(y):,}') # Formatter for big numbers
 plt.gca().yaxis.set_major_formatter(formatter)
 plt.tight_layout()
-plt.savefig("empty_cells.png")
+plt.savefig("/output/empty_cells.png")
 plt.close()
 
 #plot 2:difficulty
@@ -57,7 +60,7 @@ plt.ylabel("Number of Puzzles")
 plt.xticks(rotation=0)  # να φαίνονται τα labels ευθεία
 plt.ticklabel_format(style='plain', axis='y')  # Δείξε αριθμούς πλήρεις, όχι scientific
 plt.tight_layout()
-plt.savefig("difficulty.png")
+plt.savefig("/output/difficulty.png")
 plt.close()
 
 print("Sudoku analysis completed successfully.")
