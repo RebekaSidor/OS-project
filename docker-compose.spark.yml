@@ -1,0 +1,18 @@
+services:
+  spark_analysis:
+    build:
+      context: .
+      dockerfile: Dockerfile.spark
+    image: sudoku-analytics-spark:latest
+    container_name: sudoku_analytics_spark
+    volumes:
+      - sudoku-data:/data
+      - ./output:/output
+    ports:
+      - "8080:8080"   # Spark Master UI
+      - "4040:4040"   # Spark App UI
+    restart: "no"
+
+volumes:
+  sudoku-data:
+    external: true
