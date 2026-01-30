@@ -3,11 +3,14 @@ version: "3.9"
 services:
   analysis:
     build: .
+    image: sudoku-analytics:latest
     container_name: sudoku_analytics
     volumes:
-      - sudoku_data:/data
-      - ./output:/output
+      - sudoku-data:/data      # Docker volume for dataset
+      - ./output:/output       # local file for result
+    restart: "no"
     command: python analysis.py
 
 volumes:
-  sudoku_data:
+  sudoku-data:
+    external: true
