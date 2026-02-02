@@ -5,7 +5,6 @@ ENV HADOOP_VERSION=3
 ENV SPARK_HOME=/opt/spark
 ENV PATH="$SPARK_HOME/bin:$PATH"
 
-# Εγκατάσταση dos2unix για τη διόρθωση των Windows line endings
 RUN apt-get update && apt-get install -y curl python3 python3-pip procps dos2unix && \
     rm -rf /var/lib/apt/lists/*
 
