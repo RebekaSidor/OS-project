@@ -1,13 +1,12 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter
-
 from pathlib import Path
 
-# ================== PATHS (portable παντού) ==================
-BASE = Path(__file__).parent          # φάκελος που είναι το analysis.py
-DATA = BASE / "sudoku.csv"           # το csv δίπλα στο script
-OUT = BASE / "output"                # ο φάκελος output δίπλα στο script
+#paths
+BASE = Path(__file__).parent 
+DATA = Path("/data/sudoku.csv")
+OUT = BASE / "output"
 OUT.mkdir(exist_ok=True)
 
 #load dataset
@@ -35,7 +34,6 @@ avg_empty = df["empty_cells"].mean()
 min_empty = df["empty_cells"].min()
 max_empty = df["empty_cells"].max()
 difficulty_counts = df["difficulty"].value_counts()
-
 
 #write results to txt file
 with open(OUT / "results.txt", "w") as f:

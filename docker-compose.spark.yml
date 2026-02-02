@@ -3,14 +3,20 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.spark
-    image: sudoku-analytics-spark:latest
-    container_name: sudoku_analytics_spark
+    image: spark-final-image:latest
+    container_name: spark-container-new
+    environment:
+      - SPARK_DRIVER_MEMORY=2g
+      - SPARK_EXECUTOR_MEMORY=2g
     volumes:
       - sudoku-data:/data
-      - ./output:/output
+      - ./output_spark:/output_spark
+      - ./output_llm:/output_llm
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
-      - "8080:8080"   # Spark Master UI
-      - "4040:4040"   # Spark App UI
+      - "8080:8080"
+      - "4040:4040"
     restart: "no"
 
 volumes:
