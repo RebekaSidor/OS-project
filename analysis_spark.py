@@ -7,25 +7,25 @@ import json
 import os
 import time
 
-start_time = time.time()  #start time count
+start_time = time.time()  # Start time count
 
-#start spark session
+# Start spark session
 spark = SparkSession.builder.appName("Sudoku Analytics").getOrCreate()
 
-#load Parquet
+# Load Parquet
 df = spark.read.parquet("/data/sudoku.parquet")
 
-#count empty cells ('0') in each puzzle
+# Count empty cells ('0') in each puzzle
 df = df.withColumn("empty_cells", 
                    length(col("puzzle")) - length(regexp_replace(col("puzzle"), "0", "")))
 
-#difficulty classification
+# Difficulty classification based on empty cells
 df = df.withColumn("difficulty", 
                    when(col("empty_cells") <= 35, "Easy")
                    .when(col("empty_cells") <= 45, "Medium")
                    .otherwise("Hard"))
 
-#basic analytics
+# Basic analytics
 stats = df.agg(
     avg("empty_cells").alias("avg"),
     min("empty_cells").alias("min"),
@@ -39,7 +39,7 @@ max_val = stats["max"]
 diff_counts = df.groupBy("difficulty").count().toPandas()
 difficulty_dict = diff_counts.set_index("difficulty")["count"].to_dict()
 
-#write results to txt file
+# Write results to txt file
 output_path = "/output_spark/results_spark.txt"
 os.makedirs(os.path.dirname(output_path), exist_ok=True)
 with open(output_path, "w") as f:
@@ -54,7 +54,7 @@ with open(output_path, "w") as f:
     for key, value in sorted_diff:
         f.write(f"{key}: {value}\n")
 
-#plot 1:difficulty
+# Plot 1: difficulty
 plt.figure(figsize=(8,6))
 plot_order = ["Easy", "Medium", "Hard"]
 counts_to_plot = [difficulty_dict.get(k, 0) for k in plot_order]
@@ -64,10 +64,11 @@ plt.xlabel("Difficulty")
 plt.ylabel("Number of Puzzles")
 plt.gca().yaxis.set_major_formatter(FuncFormatter(lambda y, _: f'{int(y):,}'))
 plt.tight_layout()
+# Save image
 plt.savefig("/output_spark/difficulty_spark.png")
 plt.close()
 
-#plot 2:empty cells
+# Plot 2: empty cells
 hist_data_spark = df.groupBy("empty_cells").count().orderBy("empty_cells").toPandas()
 plt.figure(figsize=(10,6))
 plt.bar(hist_data_spark["empty_cells"], hist_data_spark["count"], color="#9D4FF7", width=0.8)
@@ -76,11 +77,13 @@ plt.xlabel("Number of Empty Cells")
 plt.ylabel("Number of Puzzles")
 plt.gca().yaxis.set_major_formatter(FuncFormatter(lambda y, _: f'{int(y):,}'))
 plt.tight_layout()
+# Save image
 plt.savefig("/output_spark/empty_cells_spark.png")
 plt.close()
 
-end_time = time.time()  #stop time count
+end_time = time.time()  # Stop time count
 
+# Print results
 print("Analysis completed successfully on the full dataset.")
 print(f"Execution time: {end_time - start_time:.2f} seconds")
 

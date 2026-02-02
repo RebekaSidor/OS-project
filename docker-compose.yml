@@ -2,15 +2,16 @@ version: "3.9"
 
 services:
   analysis:
+    # Build the Docker image from the current directory
     build: .
+    # Name and tag of the built image 
     image: sudoku-analytics:latest
+    # Container name for easy reference 
     container_name: sudoku_analytics
     volumes:
-      - sudoku-data:/data      # Docker volume for dataset
-      - ./output:/output       # local file for result
+      - ./data:/data      # Mount local data folder into /data
+      - ./output:/output       # Mount local output folder into container /output
+    # Do not automatically restart container if it stops 
+    # We do not want the container to restart needlesly  
     restart: "no"
     command: python analysis.py
-
-volumes:
-  sudoku-data:
-    external: true

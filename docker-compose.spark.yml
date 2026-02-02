@@ -1,22 +1,28 @@
 services:
   spark_analysis:
     build:
+      # Build Docker image using the current directory
       context: .
+      # Use this specific file for Spark setup
       dockerfile: Dockerfile.spark
+    # Name and tag for Docker image   
     image: spark-final-image:latest
+    # Container name for easy reference
     container_name: spark-container-new
     environment:
+      # Allocate 2 GBs of memory for the Spark driver
       - SPARK_DRIVER_MEMORY=2g
+      # Allocate 2 GBs of memory for the Spark executor
       - SPARK_EXECUTOR_MEMORY=2g
     volumes:
-      - sudoku-data:/data
-      - ./output_spark:/output_spark
-      - ./output_llm:/output_llm
+      - sudoku-data:/data  # Mount local sudoku-data folder to /data 
+      - ./output_spark:/output_spark  # Mount host folder for Spark analysis results 
+      - ./output_llm:/output_llm  # Mount host folder for LLM output
     extra_hosts:
-      - "host.docker.internal:host-gateway"
+      - "host.docker.internal:host-gateway"  # Allows container to reach host services 
     ports:
-      - "8080:8080"
-      - "4040:4040"
+      - "8080:8080"  # Expose Spark Master UI on host machine 
+      - "4040:4040"  # Expose Spark application UI
     restart: "no"
 
 volumes:

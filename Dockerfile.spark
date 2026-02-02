@@ -1,30 +1,36 @@
 FROM eclipse-temurin:11-jdk
 
+# Environment variables	
 ENV SPARK_VERSION=3.4.2
 ENV HADOOP_VERSION=3
 ENV SPARK_HOME=/opt/spark
 ENV PATH="$SPARK_HOME/bin:$PATH"
 
-#install required system packages and python libraries
+# Install required system dependencies and python libraries
 RUN apt-get update && apt-get install -y curl python3 python3-pip procps dos2unix && \
     rm -rf /var/lib/apt/lists/*
 
 RUN pip3 install --break-system-packages pyspark matplotlib pandas requests
 
+# Download and install Apache Spark
 RUN curl -L https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz \
     -o spark.tgz && \
     tar xzf spark.tgz -C /opt && \
     mv /opt/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION} ${SPARK_HOME} && \
     rm spark.tgz
 
+# Copy configuration and scripts into container 
 COPY spark-defaults.conf $SPARK_HOME/conf/spark-defaults.conf
 COPY spark-env.sh $SPARK_HOME/conf/spark-env.sh
 COPY start-spark.sh /opt/start-spark.sh
 COPY analysis_spark.py /app/analysis_spark.py
 COPY convert_csv_to_parquet.py /app/convert_csv_to_parquet.py
 
+# Make entrypoint script executable and ensure proper line endings
 RUN chmod +x /opt/start-spark.sh && dos2unix /opt/start-spark.sh
 
+# Set working directory
 WORKDIR /opt
 
+# Entrypoint for the container
 ENTRYPOINT ["/opt/start-spark.sh"]
