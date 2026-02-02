@@ -2,10 +2,14 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter
 from pathlib import Path
+import time
+
+start_time = time.time()  #start time count
 
 #paths
 BASE = Path(__file__).parent 
-DATA = Path("/data/sudoku.csv")
+#DATA = BASE / "sudoku.csv"      #venv
+DATA = Path("/data/sudoku.csv")  #docker
 OUT = BASE / "output"
 OUT.mkdir(exist_ok=True)
 
@@ -70,4 +74,7 @@ plt.tight_layout()
 plt.savefig(OUT / "difficulty.png")
 plt.close()
 
+end_time = time.time()  #stop time count
+
 print("Sudoku analysis completed successfully.")
+print(f"Execution time: {end_time - start_time:.2f} seconds")

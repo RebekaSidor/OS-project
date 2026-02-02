@@ -5,6 +5,9 @@ from matplotlib.ticker import FuncFormatter
 import requests
 import json
 import os
+import time
+
+start_time = time.time()  #start time count
 
 #start spark session
 spark = SparkSession.builder.appName("Sudoku Analytics").getOrCreate()
@@ -76,7 +79,10 @@ plt.tight_layout()
 plt.savefig("/output_spark/empty_cells_spark.png")
 plt.close()
 
+end_time = time.time()  #stop time count
+
 print("Analysis completed successfully on the full dataset.")
+print(f"Execution time: {end_time - start_time:.2f} seconds")
 
 # LLM ------------------------------------------------------------------
 
