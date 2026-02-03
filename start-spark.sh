@@ -50,7 +50,7 @@ spark-submit \
     --conf spark.eventLog.dir=file:///opt/spark/logs \
     /app/analysis_spark.py
 
-echo "All tasks completed! Results are in /output."
+echo "All tasks completed! Results are in /output_spark."
 
 # -------------------------------
 # Keep container alive for monitoring

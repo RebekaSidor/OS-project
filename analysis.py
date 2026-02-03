@@ -8,8 +8,9 @@ start_time = time.time()  # Start time count
 
 # Paths
 BASE = Path(__file__).parent 
-# DATA = BASE / "sudoku.csv"      #venv
-DATA = Path("/data/sudoku.csv")  #docker
+# Comment one of these lines and un-comment the other depending on the step you want to run
+# DATA = Path("data/sudoku.csv")      # Step 1
+DATA = Path("/data/sudoku.csv")  # Step 2
 OUT = BASE / "output"
 OUT.mkdir(exist_ok=True)
 
